@@ -3,7 +3,8 @@ type PizzaBlockType = {
     price: number,
     title: string
 }
-export function PizzaBlock(props: PizzaBlockType) {
+export function PizzaBlock({price, title}: PizzaBlockType) {
+
     return (
         <div className="pizza-block">
             <img
@@ -11,7 +12,7 @@ export function PizzaBlock(props: PizzaBlockType) {
                 src="https://dodopizza-a.akamaihd.net/static/Img/Products/Pizza/ru-RU/b750f576-4a83-48e6-a283-5a8efb68c35d.jpg"
                 alt="Pizza"
             />
-            <h4 className="pizza-block__title">{props.title}</h4>
+            <h4 className="pizza-block__title">{title}</h4>
             <div className="pizza-block__selector">
                 <ul>
                     <li className="active">тонкое</li>
@@ -24,7 +25,7 @@ export function PizzaBlock(props: PizzaBlockType) {
                 </ul>
             </div>
             <div className="pizza-block__bottom">
-                <div className="pizza-block__price">от {props.price} Br</div>
+                <div className="pizza-block__price">от {price} Br</div>
                 <div className="button button--outline button--add">
                     <svg
                         width="12"
