@@ -1,17 +1,19 @@
-import React from 'react';
+import {useState} from 'react';
+
 
 type PizzaBlockType = {
     price: number,
     title: string,
     imageUrl: string,
     sizes: number[],
-    types: number[]
+    types: number[],
+
 }
 
 export function PizzaBlock({price, title, imageUrl, sizes, types}: PizzaBlockType) {
 
-    const [activeType, setActiveType] = React.useState(0)
-    const [activeSize, setActiveSize] = React.useState(0)
+    const [activeType, setActiveType] = useState(0)
+    const [activeSize, setActiveSize] = useState(0)
     const typeNames = ['тонкое', 'традиционное']
 
     return (
@@ -26,6 +28,7 @@ export function PizzaBlock({price, title, imageUrl, sizes, types}: PizzaBlockTyp
                 <ul>
                     {types.map((typeId) => (
                         <li
+                            key={typeId}
                             className={activeType === typeId ? 'active' : ''}
                             onClick={() => setActiveType(typeId)}
                         >
@@ -36,6 +39,7 @@ export function PizzaBlock({price, title, imageUrl, sizes, types}: PizzaBlockTyp
                 <ul>
                     {sizes.map((size, index) => (
                             <li
+                                key={index}
                                 className={index === activeSize ? 'active' : ''}
                                 onClick={() => setActiveSize(index)}
                             >
