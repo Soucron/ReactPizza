@@ -1,9 +1,11 @@
 import './scss/app.scss'
 import {Header} from './components/Header.tsx';
-import {Categories} from './components/Categories.tsx';
-import {Sort} from './components/Sort.tsx';
-import {PizzaBlock} from './components/PizzaBlock.tsx';
-import {useEffect, useState} from 'react';
+import {Home} from './pages/Home.tsx';
+import {  Route, Routes } from 'react-router-dom';
+
+import {Cart} from './pages/Cart.tsx';
+import {NotFoundBlock} from './components/NotFoundBlock';
+
 
 
 export type PizzasType = {
@@ -16,19 +18,8 @@ export type PizzasType = {
     category: number;
     rating: number;
 };
+
 function App() {
-
-    const [pizzas, setPizzas] = useState<PizzasType[]>([])
-
-    useEffect(() => {
-        fetch('https://64ee53381f87218271428632.mockapi.io/items')
-            .then(res => {
-                return res.json()
-            })
-            .then(data => {
-                setPizzas(data)
-            })
-    }, []);
 
 
 
@@ -38,19 +29,11 @@ function App() {
             <Header/>
             <div className="content">
                 <div className="container">
-                    <div className="content__top">
-                        <Categories/>
-                        <Sort/>
-                    </div>
-                    <h2 className="content__title">Все пиццы</h2>
-                    <div className="content__items">
-                        {
-                            pizzas.map((pizza) => (
-                                <PizzaBlock key={pizza.id} {...pizza}
-                                />
-                            ))
-                        }
-                    </div>
+                        <Routes>
+                            <Route path='/' element={<Home/>}/>
+                            <Route path='/cart' element={<Cart/>}/>
+                            <Route path={'*'} element={<NotFoundBlock/>}/>
+                        </Routes>
                 </div>
             </div>
         </div>
