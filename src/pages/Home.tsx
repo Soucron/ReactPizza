@@ -8,9 +8,21 @@ import {PizzasType} from '../App.tsx';
 export const Home = () => {
     const [pizzas, setPizzas] = useState<PizzasType[]>([])
     const [isLoading, setIsLoading] = useState(true)
+    const [selectedSort, setSelectedSort] = useState(0)
+    const [currentCategory, setCurrentCategory] = useState(0)
+
+    const list = [
+        {name: 'популярности (ASC)', sort: 'rating', asc: true},
+        {name: 'популярности (DESC)', sort: 'rating', asc: false},
+        {name: 'цене (ASC)', sort: 'price',asc: true},
+        {name: 'цене (DESC)', sort: 'price', asc: false},
+        {name: 'алфавиту (ASC)', sort: 'title', asc: true},
+        {name: 'алфавиту (DESC)', sort: 'title', asc: false}
+    ]
 
     useEffect(() => {
-        fetch('https://64ee53381f87218271428632.mockapi.io/items')
+        setIsLoading(true)
+        fetch(`https://64ee53381f87218271428632.mockapi.io/items?${currentCategory > 0 ? `category=${currentCategory}` : ''}&sortBy=${list[selectedSort].sort}&order=${list[selectedSort].asc ? 'asc' : 'desc'}`)
             .then(res => {
                 return res.json()
             })
@@ -21,12 +33,13 @@ export const Home = () => {
                     setIsLoading(false)
                 }
             )
-    }, []);
+        window.scrollTo(0, 0)
+    }, [currentCategory, selectedSort]);
 
-    return (<>
+    return (<div className="container">
             <div className="content__top">
-                <Categories/>
-                <Sort/>
+                <Categories currentCategory={currentCategory} setCurrentCategory={setCurrentCategory}/>
+                <Sort selectedSort={selectedSort} setSelectedSort={setSelectedSort} list={list}/>
             </div>
             <h2 className="content__title">Все пиццы</h2>
             <div className="content__items">
@@ -37,6 +50,6 @@ export const Home = () => {
                     : pizzas.map((pizza) => (<PizzaBlock key={pizza.id} {...pizza}/>))
                 }
             </div>
-        </>
+        </div>
     )
 }
