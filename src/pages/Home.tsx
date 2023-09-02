@@ -2,20 +2,20 @@ import {Categories} from '../components/Categories.tsx';
 import {Sort} from '../components/Sort.tsx';
 import {Skeleton} from '../components/PizzaBlock/Skeleton.tsx';
 import {PizzaBlock} from '../components/PizzaBlock';
-import {useEffect, useState} from 'react';
-import {PizzasType} from '../App.tsx';
+import {useContext, useEffect, useState} from 'react';
+import {PizzasType, SearchContext} from '../App.tsx';
 import {Pagination} from '../components/Pagination';
 
 
-type HomePropsType = {
-    searchValue: string
-}
-export const Home = ({searchValue}: HomePropsType) => {
+
+export const Home = () => {
     const [pizzas, setPizzas] = useState<PizzasType[]>([])
     const [isLoading, setIsLoading] = useState(true)
     const [selectedSort, setSelectedSort] = useState(0)
     const [currentCategory, setCurrentCategory] = useState(0)
     const [currentPage, setCurrentPage] = useState(1)
+
+    const {searchValue} = useContext(SearchContext)
 
     const list = [
         {name: 'популярности (ASC)', sort: 'rating', asc: true},
