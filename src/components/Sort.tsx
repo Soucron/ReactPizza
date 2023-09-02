@@ -1,21 +1,21 @@
-import {useState} from 'react';
-
-type SortPropsType = {
-    setSelectedSort: (value: number) => void
-    selectedSort: number
-    list: { name: string, sort: string, asc: boolean }[]
-}
-export function Sort({selectedSort, setSelectedSort, list} : SortPropsType) {
-
-    const [isVisible, setIsVisible] = useState(false)
+import {AppRootStateType, useAppDispatch} from '../redux/store.ts';
+import {filterActions} from '../redux/slices/filterSlice.ts';
+import {useSelector} from 'react-redux';
+import {appActions} from '../redux/slices/appSlice.ts';
 
 
+export function Sort() {
+    const {selectedSort, list} = useSelector((state: AppRootStateType) => state.filter)
+    const isVisible = useSelector((state: AppRootStateType) => state.app.isVisible)
+    const dispatch = useAppDispatch()
 
+    const sortOnClickHandler = (selectedSort: number) => {
+        dispatch(filterActions.setSelectedSort({selectedSort}))
+        dispatch(appActions.setIsVisible({isVisible: false}))
+    }
 
-    const sortOnClickHandler =  function(value: number) {
-        setSelectedSort(value)
-        setIsVisible(false)
-
+    const openSort = () => {
+        dispatch(appActions.setIsVisible({isVisible:!isVisible}))
     }
 
     return (
@@ -34,7 +34,7 @@ export function Sort({selectedSort, setSelectedSort, list} : SortPropsType) {
                     />
                 </svg>
                 <b>Сортировка по:</b>
-                <span onClick={()=> setIsVisible(!isVisible)}>{list[selectedSort].name}</span>
+                <span onClick={openSort}>{list[selectedSort].name}</span>
             </div>
 
             {isVisible && (
@@ -43,7 +43,7 @@ export function Sort({selectedSort, setSelectedSort, list} : SortPropsType) {
                         {list.map((obj, index) => (
                             <li
                                 key={index}
-                                onClick={()=>sortOnClickHandler(index)}
+                                onClick={() => sortOnClickHandler(index)}
                                 className={selectedSort === index ? 'active' : ''}
                             >
                                 {obj.name}

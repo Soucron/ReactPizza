@@ -5,32 +5,28 @@ import {PizzaBlock} from '../components/PizzaBlock';
 import {useContext, useEffect, useState} from 'react';
 import {PizzasType, SearchContext} from '../App.tsx';
 import {Pagination} from '../components/Pagination';
+import {useSelector} from 'react-redux';
+import {AppRootStateType, useAppDispatch} from '../redux/store.ts';
+import {appActions} from '../redux/slices/appSlice.ts';
 
 
 
 export const Home = () => {
+    const dispatch = useAppDispatch()
+    const {currentCategory,list,selectedSort} = useSelector((state: AppRootStateType) => state.filter)
+    const isLoading = useSelector((state: AppRootStateType) => state.app.isLoading)
+
     const [pizzas, setPizzas] = useState<PizzasType[]>([])
-    const [isLoading, setIsLoading] = useState(true)
-    const [selectedSort, setSelectedSort] = useState(0)
-    const [currentCategory, setCurrentCategory] = useState(0)
     const [currentPage, setCurrentPage] = useState(1)
 
     const {searchValue} = useContext(SearchContext)
 
-    const list = [
-        {name: 'популярности (ASC)', sort: 'rating', asc: true},
-        {name: 'популярности (DESC)', sort: 'rating', asc: false},
-        {name: 'цене (ASC)', sort: 'price', asc: true},
-        {name: 'цене (DESC)', sort: 'price', asc: false},
-        {name: 'алфавиту (ASC)', sort: 'title', asc: true},
-        {name: 'алфавиту (DESC)', sort: 'title', asc: false}
-    ]
     const category = currentCategory > 0 ? `category=${currentCategory}` : ''
     const order = list[selectedSort].asc ? 'asc' : 'desc'
     const search = searchValue ? `search=${searchValue}` : ''
 
     useEffect(() => {
-        setIsLoading(true)
+        dispatch(appActions.setIsLoading({isLoading: true}))
         fetch(`https://64ee53381f87218271428632.mockapi.io/items?page=${currentPage}&limit=4&${category}&sortBy=${list[selectedSort].sort}&order=${order}&${search}`)
             .then(res => {
                 return res.json()
@@ -39,7 +35,7 @@ export const Home = () => {
                 setPizzas(data)
             })
             .finally(() => {
-                    setIsLoading(false)
+                dispatch(appActions.setIsLoading({isLoading: false}))
                 }
             )
         window.scrollTo(0, 500)
@@ -55,15 +51,15 @@ export const Home = () => {
 
     return (<div className="container">
             <div className="content__top">
-                <Categories currentCategory={currentCategory} setCurrentCategory={setCurrentCategory}/>
-                <Sort selectedSort={selectedSort} setSelectedSort={setSelectedSort} list={list}/>
+                <Categories />
+                <Sort/>
             </div>
             <h2 className="content__title">Все пиццы</h2>
             <div className="content__items">
 
                 {isLoading
                     ?
-                    [...new Array(8)].map((_, index) => <Skeleton key={index}/>)
+                    [...new Array(4)].map((_, index) => <Skeleton key={index}/>)
                     : items}
 
             </div>
