@@ -3,7 +3,8 @@ import logoSvg from '../assets/img/pizza-logo.svg'
 import {Search} from './Search';
 
 
-export function Header() {
+
+export const Header = (() => {
 
     return (
 
@@ -19,7 +20,7 @@ export function Header() {
                         </div>
                     </div>
                 </Link>
-                <Search   />
+                <Search />
                 <div className="header__cart">
                     <Link to="/cart" className="button button--cart">
                         <span>520 ₽</span>
@@ -60,4 +61,4 @@ export function Header() {
             </div>
         </div>
     )
-}
+})

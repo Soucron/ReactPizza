@@ -5,6 +5,7 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 const initialState = {
     currentCategory: 0,
     selectedSort: 0,
+    currentPage: 1,
     list : [
         {name: 'популярности (ASC)', sort: 'rating', asc: true},
         {name: 'популярности (DESC)', sort: 'rating', asc: false},
@@ -25,6 +26,9 @@ const slice = createSlice({
         },
         setSelectedSort(state, action:PayloadAction<{selectedSort: number}>) {
             state.selectedSort = action.payload.selectedSort
+        },
+        setCurrentPage(state, action:PayloadAction<{currentPage: number}>) {
+            state.currentPage = action.payload.currentPage
         }
     }
 })

@@ -2,21 +2,22 @@ import {AppRootStateType, useAppDispatch} from '../redux/store.ts';
 import {filterActions} from '../redux/slices/filterSlice.ts';
 import {useSelector} from 'react-redux';
 import {appActions} from '../redux/slices/appSlice.ts';
+import {memo, useCallback} from 'react';
 
 
-export function Sort() {
+export const  Sort = memo(() => {
     const {selectedSort, list} = useSelector((state: AppRootStateType) => state.filter)
     const isVisible = useSelector((state: AppRootStateType) => state.app.isVisible)
     const dispatch = useAppDispatch()
 
-    const sortOnClickHandler = (selectedSort: number) => {
+    const sortOnClickHandler = useCallback((selectedSort: number) => {
         dispatch(filterActions.setSelectedSort({selectedSort}))
         dispatch(appActions.setIsVisible({isVisible: false}))
-    }
+    }, [isVisible,selectedSort])
 
-    const openSort = () => {
+    const openSort = useCallback(() => {
         dispatch(appActions.setIsVisible({isVisible:!isVisible}))
-    }
+    }, [isVisible])
 
     return (
         <div className="sort">
@@ -54,4 +55,4 @@ export function Sort() {
                 </div>)}
         </div>
     )
-}
+})

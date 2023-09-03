@@ -2,22 +2,22 @@ import {Categories} from '../components/Categories.tsx';
 import {Sort} from '../components/Sort.tsx';
 import {Skeleton} from '../components/PizzaBlock/Skeleton.tsx';
 import {PizzaBlock} from '../components/PizzaBlock';
-import {useContext, useEffect, useState} from 'react';
+import {useCallback, useContext, useEffect, useState} from 'react';
 import {PizzasType, SearchContext} from '../App.tsx';
 import {Pagination} from '../components/Pagination';
 import {useSelector} from 'react-redux';
 import {AppRootStateType, useAppDispatch} from '../redux/store.ts';
 import {appActions} from '../redux/slices/appSlice.ts';
-
+import axios from 'axios';
+import {filterActions} from '../redux/slices/filterSlice.ts';
 
 
 export const Home = () => {
     const dispatch = useAppDispatch()
-    const {currentCategory,list,selectedSort} = useSelector((state: AppRootStateType) => state.filter)
+    const {currentCategory, list, selectedSort, currentPage} = useSelector((state: AppRootStateType) => state.filter)
     const isLoading = useSelector((state: AppRootStateType) => state.app.isLoading)
 
     const [pizzas, setPizzas] = useState<PizzasType[]>([])
-    const [currentPage, setCurrentPage] = useState(1)
 
     const {searchValue} = useContext(SearchContext)
 
@@ -26,20 +26,26 @@ export const Home = () => {
     const search = searchValue ? `search=${searchValue}` : ''
 
     useEffect(() => {
-        dispatch(appActions.setIsLoading({isLoading: true}))
-        fetch(`https://64ee53381f87218271428632.mockapi.io/items?page=${currentPage}&limit=4&${category}&sortBy=${list[selectedSort].sort}&order=${order}&${search}`)
-            .then(res => {
-                return res.json()
-            })
-            .then(data => {
-                setPizzas(data)
-            })
-            .finally(() => {
-                dispatch(appActions.setIsLoading({isLoading: false}))
-                }
-            )
-        window.scrollTo(0, 500)
+        const timer = setTimeout(() => {
+            dispatch(appActions.setIsLoading({isLoading: true}))
+            axios.get(`https://64ee53381f87218271428632.mockapi.io/items?page=${currentPage}&limit=4&${category}&sortBy=${list[selectedSort].sort}&order=${order}&${search}`)
+                .then((res) => {
+                    setPizzas(res.data)
+                })
+                .finally(() => {
+                        dispatch(appActions.setIsLoading({isLoading: false}))
+                    }
+                )
+            window.scrollTo(0, 100)
+        }, 500)
+        return () => {
+            clearTimeout(timer)
+        }
     }, [currentCategory, selectedSort, searchValue, currentPage]);
+
+    const setCurrentPage = useCallback((currentPage: number) => {
+        dispatch(filterActions.setCurrentPage({currentPage: currentPage}))
+    }, [currentPage])
 
     const items = pizzas.filter(obj => {
         return obj
@@ -51,7 +57,7 @@ export const Home = () => {
 
     return (<div className="container">
             <div className="content__top">
-                <Categories />
+                <Categories/>
                 <Sort/>
             </div>
             <h2 className="content__title">Все пиццы</h2>
@@ -63,7 +69,7 @@ export const Home = () => {
                     : items}
 
             </div>
-            <Pagination  setCurrentPage={setCurrentPage}/>
+            <Pagination setCurrentPage={setCurrentPage} currentPage={currentPage}/>
         </div>
     )
 }
