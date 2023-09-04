@@ -18,6 +18,7 @@ export type PizzasType = {
     price: number;
     category: number;
     rating: number;
+    count: number
 };
 
 export const SearchContext = createContext<SearchPropsType>({searchValue: '', setSearchValue: () => {}})
