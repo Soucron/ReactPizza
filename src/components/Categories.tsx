@@ -8,13 +8,13 @@ import {memo, useCallback} from 'react';
 export const  Categories =  memo(()  => {
 
     const currentCategory = useSelector((state: AppRootStateType) => state.filter.currentCategory)
+    const categories = useSelector((state: AppRootStateType) => state.filter.categories)
     const dispatch = useAppDispatch()
 
     const setCategoryHandler = useCallback((currentCategory: number) => {
         dispatch(filterActions.setCurrentCategory({currentCategory}))
     }, [currentCategory])
 
-    const categories = ['Все', 'Мясные', 'Вегетарианская', 'Гриль', 'Острые','Закрытые']
 
     return (
         <div className="categories">

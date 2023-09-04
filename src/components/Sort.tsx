@@ -2,13 +2,16 @@ import {AppRootStateType, useAppDispatch} from '../redux/store.ts';
 import {filterActions} from '../redux/slices/filterSlice.ts';
 import {useSelector} from 'react-redux';
 import {appActions} from '../redux/slices/appSlice.ts';
-import {memo, useCallback} from 'react';
+import {memo, useCallback, useEffect, useRef} from 'react';
 
 
 export const  Sort = memo(() => {
-    const {selectedSort, list} = useSelector((state: AppRootStateType) => state.filter)
+    const selectedSort = useSelector((state: AppRootStateType) => state.filter.selectedSort)
+    const list = useSelector((state: AppRootStateType) => state.filter.list)
     const isVisible = useSelector((state: AppRootStateType) => state.app.isVisible)
     const dispatch = useAppDispatch()
+
+    const sortRef = useRef<HTMLDivElement>(null)
 
     const sortOnClickHandler = useCallback((selectedSort: number) => {
         dispatch(filterActions.setSelectedSort({selectedSort}))
@@ -19,8 +22,19 @@ export const  Sort = memo(() => {
         dispatch(appActions.setIsVisible({isVisible:!isVisible}))
     }, [isVisible])
 
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if ( isVisible && sortRef.current &&  !event.composedPath().includes(sortRef.current)  ) {
+                dispatch(appActions.setIsVisible({isVisible: false}))
+            }
+        }
+        document.body.addEventListener('click', handleClickOutside)
+
+        return () => document.body.removeEventListener('click', handleClickOutside)
+    }, [isVisible, sortRef]);
+
     return (
-        <div className="sort">
+        <div ref={sortRef} className="sort">
             <div className="sort__label">
                 <svg
                     width="10"

@@ -1,6 +1,31 @@
 import {Link} from 'react-router-dom'
+import  {memo} from 'react';
+import {useSelector} from 'react-redux';
+import {AppRootStateType, useAppDispatch} from '../redux/store.ts';
+import {CartItem} from '../components/CartItem.tsx';
+import {cartActions} from '../redux/slices/cartSlice.ts';
+import { CartEmpty } from '../components/CartEmpty.tsx';
 
-export const Cart = () => {
+
+
+export const Cart = memo(() => {
+    const dispatch = useAppDispatch()
+    const items  = useSelector((state: AppRootStateType) => state.cart.items)
+    const totalPrice = useSelector((state: AppRootStateType) => state.cart.totalPrice)
+    const totalPizzas = useSelector((state: AppRootStateType) => state.cart.totalPizzas)
+
+
+    const cleanCartHandler = () => {
+        if (window.confirm('Очистить корзину?')){
+            dispatch(cartActions.clearItems())
+        }
+
+    }
+
+    if (!totalPizzas  ) {
+        return  <CartEmpty/>
+    }
+
     return (
         <div className="container container--cart">
             <div className="cart">
@@ -8,47 +33,19 @@ export const Cart = () => {
                     <h2 className="content__title">
                         Корзина
                     </h2>
-                    <div className="cart__clear">
+                    <div onClick={cleanCartHandler} className="cart__clear">
                         <img src={'src/assets/img/trash.svg'}/>
                         <span>Очистить корзину</span>
                     </div>
                 </div>
                 <div className="content__items">
-                    <div className="cart__item">
-                        <div className="cart__item-img">
-                            <img
-                                className="pizza-block__image"
-                                src="https://dodopizza-a.akamaihd.net/static/Img/Products/Pizza/ru-RU/b750f576-4a83-48e6-a283-5a8efb68c35d.jpg"
-                                alt="Pizza"
-                            />
-                        </div>
-                        <div className="cart__item-info">
-                            <h3>Сырный цыпленок</h3>
-                            <p>тонкое тесто, 26 см.</p>
-                        </div>
-                        <div className="cart__item-count">
-                            <div className="button button--outline button--circle cart__item-count-minus">
-                                <img src={'src/assets/img/trash.svg'}/>
-                            </div>
-                            <b>2</b>
-                            <div className="button button--outline button--circle cart__item-count-plus">
-                                <img src={'src/assets/img/plus.svg'}/>
-                            </div>
-                        </div>
-                        <div className="cart__item-price">
-                            <b>770 ₽</b>
-                        </div>
-                        <div className="cart__item-remove">
-                            <div className="button button--outline button--circle">
-                                <img src={'src/assets/img/trash.svg'}/>
-                            </div>
-                        </div>
-                    </div>
+                    {items.map( (item) => <CartItem key={item.id} {...item}/>)}
+
                 </div>
                 <div className="cart__bottom">
                     <div className="cart__bottom-details">
-                        <span> Всего пицц: <b>3 шт.</b> </span>
-                        <span> Сумма заказа: <b>900 ₽</b> </span>
+                        <span> Всего пицц: <b>{totalPizzas} шт.</b> </span>
+                        <span> Сумма заказа: <b>{totalPrice} ₽</b> </span>
                     </div>
                     <div className="cart__bottom-buttons">
                         <Link to="/" className="button button--outline button--add go-back-btn">
@@ -64,4 +61,4 @@ export const Cart = () => {
         </div>
     )
 
-}
+})

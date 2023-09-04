@@ -10,12 +10,16 @@ import {AppRootStateType, useAppDispatch} from '../redux/store.ts';
 import {appActions} from '../redux/slices/appSlice.ts';
 import axios from 'axios';
 import {filterActions} from '../redux/slices/filterSlice.ts';
+import qs from 'qs';
+import { useNavigate } from 'react-router-dom';
 
 
 export const Home = () => {
     const dispatch = useAppDispatch()
+    const navigate = useNavigate()
     const {currentCategory, list, selectedSort, currentPage} = useSelector((state: AppRootStateType) => state.filter)
     const isLoading = useSelector((state: AppRootStateType) => state.app.isLoading)
+    const categories = useSelector((state: AppRootStateType) => state.filter.categories)
 
     const [pizzas, setPizzas] = useState<PizzasType[]>([])
 
@@ -24,6 +28,11 @@ export const Home = () => {
     const category = currentCategory > 0 ? `category=${currentCategory}` : ''
     const order = list[selectedSort].asc ? 'asc' : 'desc'
     const search = searchValue ? `search=${searchValue}` : ''
+    const sort = 'по' + list[selectedSort].name
+    const currCategory = categories[currentCategory]
+
+
+
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -42,6 +51,17 @@ export const Home = () => {
             clearTimeout(timer)
         }
     }, [currentCategory, selectedSort, searchValue, currentPage]);
+
+    useEffect(() => {
+        const queryString = qs.stringify({
+            sort,
+            currCategory,
+            order,
+            currentPage
+        })
+
+        navigate(`?${queryString}`)
+    }, [currentCategory, sort, searchValue, currentPage]);
 
     const setCurrentPage = useCallback((currentPage: number) => {
         dispatch(filterActions.setCurrentPage({currentPage: currentPage}))

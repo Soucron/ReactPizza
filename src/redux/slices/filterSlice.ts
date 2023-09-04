@@ -13,7 +13,8 @@ const initialState = {
         {name: 'цене (DESC)', sort: 'price', asc: false},
         {name: 'алфавиту (ASC)', sort: 'title', asc: true},
         {name: 'алфавиту (DESC)', sort: 'title', asc: false}
-    ]
+    ],
+    categories: ['Все', 'Мясные', 'Вегетарианские', 'Гриль', 'Острые','Закрытые']
 
 }
 

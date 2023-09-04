@@ -1,20 +1,39 @@
 import {useState} from 'react';
+import {AppRootStateType, useAppDispatch} from '../../redux/store.ts';
+import {cartActions} from '../../redux/slices/cartSlice.ts';
+import {useSelector} from 'react-redux';
 
 
-type PizzaBlockType = {
+type PizzaItemType = {
     price: number,
     title: string,
     imageUrl: string,
     sizes: number[],
     types: number[],
+    id: number,
+    count: number
 
 }
 
-export function PizzaBlock({price, title, imageUrl, sizes, types}: PizzaBlockType) {
-
+export function PizzaBlock({id,price, title, imageUrl, sizes, types}: PizzaItemType) {
+    const dispatch = useAppDispatch()
+    const {count = 0} = useSelector((state: AppRootStateType) => state.cart.items.find((obj) => obj.id === id)) || {}
     const [activeType, setActiveType] = useState(0)
     const [activeSize, setActiveSize] = useState(0)
     const typeNames = ['тонкое', 'традиционное']
+
+    const onClickAdd = () => {
+        const item = {
+            id,
+            title,
+            price,
+            imageUrl,
+            type: typeNames[activeType],
+            size: sizes[activeSize],
+            count: 0
+        }
+        dispatch(cartActions.addItem({item}))
+    }
 
     return (
         <div className="pizza-block">
@@ -51,7 +70,7 @@ export function PizzaBlock({price, title, imageUrl, sizes, types}: PizzaBlockTyp
             </div>
             <div className="pizza-block__bottom">
                 <div className="pizza-block__price">от {price} ₽</div>
-                <div className="button button--outline button--add">
+                <button onClick={onClickAdd} className="button button--outline button--add">
                     <svg
                         width="12"
                         height="12"
@@ -65,8 +84,8 @@ export function PizzaBlock({price, title, imageUrl, sizes, types}: PizzaBlockTyp
                         />
                     </svg>
                     <span>Добавить</span>
-                    <i>1</i>
-                </div>
+                    <i>{count}</i>
+                </button>
             </div>
         </div>
     )

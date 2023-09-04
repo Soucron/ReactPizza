@@ -2,6 +2,7 @@ import {configureStore, createAsyncThunk} from '@reduxjs/toolkit';
 import {useDispatch} from 'react-redux';
 import {filterReducer} from './slices/filterSlice.ts';
 import {appReducer} from './slices/appSlice.ts';
+import {cartReducer} from './slices/cartSlice.ts';
 
 
 
@@ -9,7 +10,8 @@ import {appReducer} from './slices/appSlice.ts';
 export const store = configureStore({
     reducer: {
         filter: filterReducer,
-        app: appReducer
+        app: appReducer,
+        cart: cartReducer
     }
 })
 
