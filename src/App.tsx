@@ -9,17 +9,7 @@ import {createContext, useState} from 'react';
 import {SearchPropsType} from './components/Search';
 
 
-export type PizzasType = {
-    id: number;
-    imageUrl: string;
-    title: string;
-    types: number[];
-    sizes: number[];
-    price: number;
-    category: number;
-    rating: number;
-    count: number
-};
+
 
 export const SearchContext = createContext<SearchPropsType>({searchValue: '', setSearchValue: () => {}})
 

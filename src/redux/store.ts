@@ -3,6 +3,7 @@ import {useDispatch} from 'react-redux';
 import {filterReducer} from './slices/filterSlice.ts';
 import {appReducer} from './slices/appSlice.ts';
 import {cartReducer} from './slices/cartSlice.ts';
+import {pizzaReducer} from './slices/pizzaSlice.ts';
 
 
 
@@ -11,7 +12,8 @@ export const store = configureStore({
     reducer: {
         filter: filterReducer,
         app: appReducer,
-        cart: cartReducer
+        cart: cartReducer,
+        pizza: pizzaReducer
     }
 })
 
