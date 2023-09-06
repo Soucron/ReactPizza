@@ -2,13 +2,10 @@ import {Categories} from '../components/Categories.tsx';
 import {Sort} from '../components/Sort.tsx';
 import {Skeleton} from '../components/PizzaBlock/Skeleton.tsx';
 import {PizzaBlock} from '../components/PizzaBlock';
-import {useCallback, useContext, useEffect} from 'react';
-import { SearchContext} from '../App.tsx';
+import {useCallback,  useEffect} from 'react';
 import {Pagination} from '../components/Pagination';
 import {useSelector} from 'react-redux';
 import {AppRootStateType, useAppDispatch} from '../redux/store.ts';
-// import {appActions} from '../redux/slices/appSlice.ts';
-// import axios from 'axios';
 import {filterActions} from '../redux/slices/filterSlice.ts';
 import qs from 'qs';
 import { useNavigate } from 'react-router-dom';
@@ -23,7 +20,7 @@ export const Home = () => {
     const categories = useSelector((state: AppRootStateType) => state.filter.categories)
     const pizzas = useSelector( (state: AppRootStateType) => state.pizza.pizzas)
 
-    const {searchValue} = useContext(SearchContext)
+    const searchValue = useSelector((state: AppRootStateType) => state.app.searchValue)
 
     const category = currentCategory > 0 ? `category=${currentCategory}` : ''
     const order = list[selectedSort].asc ? 'asc' : 'desc'

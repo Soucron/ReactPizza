@@ -2,8 +2,8 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
 const initialState = {
     isLoading: false,
-    isVisible: false
-
+    isVisible: false,
+    searchValue: ''
 }
 
 const slice = createSlice({
@@ -15,7 +15,11 @@ const slice = createSlice({
         },
         setIsVisible(state, action: PayloadAction<{isVisible: boolean}>) {
             state.isVisible = action.payload.isVisible
+        },
+        setSearchValue(state, action: PayloadAction<{searchValue: string}>) {
+            state.searchValue = action.payload.searchValue
         }
+
     }
 })
 
