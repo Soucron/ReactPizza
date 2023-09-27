@@ -1,4 +1,4 @@
-import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
+import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import {appActions} from './appSlice.ts';
 import axios from 'axios';
 
@@ -13,13 +13,7 @@ const initialState: {
 const slice = createSlice({
     name: 'pizza',
     initialState,
-    reducers: {
-        setPizzas(state, action: PayloadAction<{
-            pizzas: PizzasType[]
-        }>) {
-            state.pizzas = action.payload.pizzas
-        },
-    },
+    reducers: {},
     extraReducers: (builder) => {
         builder
             .addCase(pizzaThunks.fetchPizza.fulfilled, (state, action) => {

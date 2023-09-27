@@ -15,7 +15,6 @@ export const Header = memo(() => {
     return (
 
         <div className="header">
-
             <div className="container">
                 <Link to="/">
                     <div className="header__logo">
